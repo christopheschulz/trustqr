@@ -1,5 +1,12 @@
-import { Stack } from "expo-router";
+// app/_layout.tsx
+import { Tabs } from 'expo-router';
 
-export default function RootLayout() {
-  return <Stack />;
+export default function TabLayout() {
+  return (
+    <Tabs>
+      <Tabs.Screen name="home" options={{ title: "Accueil" }} />
+      <Tabs.Screen name="profile" options={{ title: "Profil" }} />
+      <Tabs.Screen name="settings" options={{ title: "Paramètres" }} />
+    </Tabs>
+  );
 }
