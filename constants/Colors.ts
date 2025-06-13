@@ -14,6 +14,37 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    danger: '#E53935',
+    // Couleurs de sécurité
+    security: {
+      safe: '#4CAF50',      // Vert pour sûr
+      suspect: '#FF9800',   // Orange pour suspect  
+      dangerous: '#F44336', // Rouge pour dangereux
+    },
+    // Couleurs système
+    shadow: '#000',
+    white: '#fff',
+    error: '#F44336',
+    transparent: 'transparent',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    tintWithOpacity: tintColorLight + '10', // Tint avec 10% d'opacité
+    button: {
+      primary: {
+        background: tintColorLight,
+        text: '#fff',
+        border: 'transparent',
+      },
+      secondary: {
+        background: 'transparent',
+        text: tintColorLight,
+        border: tintColorLight,
+      },
+      danger: {
+        background: '#E53935',
+        text: '#fff',
+        border: 'transparent',
+      },
+    },
   },
   dark: {
     text: '#ECEDEE',
@@ -22,5 +53,36 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    danger: '#E53935',
+    // Couleurs de sécurité
+    security: {
+      safe: '#4CAF50',      // Vert pour sûr
+      suspect: '#FF9800',   // Orange pour suspect
+      dangerous: '#F44336', // Rouge pour dangereux
+    },
+    // Couleurs système
+    shadow: '#000',
+    white: '#fff',
+    error: '#F44336',
+    transparent: 'transparent',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    tintWithOpacity: tintColorDark + '10', // Tint avec 10% d'opacité
+    button: {
+      primary: {
+        background: tintColorDark,
+        text: '#151718',
+        border: 'transparent',
+      },
+      secondary: {
+        background: 'transparent',
+        text: tintColorDark,
+        border: tintColorDark,
+      },
+      danger: {
+        background: '#E53935',
+        text: '#fff',
+        border: 'transparent',
+      },
+    },
   },
 };

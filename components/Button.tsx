@@ -5,30 +5,35 @@ import { ThemedText } from './ThemedText';
 interface ButtonProps {
     onPress: () => void;
     title: string;
-    variant?: 'primary' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'danger';
+    disabled?: boolean;
 }
 
-export function Button({ onPress, title, variant = 'primary' }: ButtonProps) {
+export function Button({ onPress, title, variant = 'primary', disabled = false }: ButtonProps) {
     const colorScheme = useColorScheme() ?? 'light';
     const colors = Colors[colorScheme];
-
-    const backgroundColor = variant === 'primary' ? colors.tint : 'transparent';
-    const textColor = variant === 'primary' ? colors.background : colors.tint;
-    const borderColor = variant === 'secondary' ? colors.tint : 'transparent';
+    const buttonColors = colors.button[variant];
 
     return (
         <TouchableOpacity
             style={[
                 styles.button,
                 { 
-                    backgroundColor,
-                    borderColor,
+                    backgroundColor: buttonColors.background,
+                    borderColor: buttonColors.border,
                     borderWidth: variant === 'secondary' ? 1 : 0,
-                }
+                },
+                disabled && styles.disabled
             ]}
-            onPress={onPress}
+            onPress={disabled ? undefined : onPress}
+            disabled={disabled}
+            activeOpacity={disabled ? 1 : 0.7}
         >
-            <ThemedText style={[styles.text, { color: textColor }]}>
+            <ThemedText style={[
+                styles.text, 
+                { color: buttonColors.text },
+                disabled && styles.disabledText
+            ]}> 
                 {title}
             </ThemedText>
         </TouchableOpacity>
@@ -43,7 +48,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 2,
-        shadowColor: '#000',
+        shadowColor: Colors.light.shadow,
         shadowOffset: {
             width: 0,
             height: 2,
@@ -54,5 +59,13 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         fontWeight: '600',
+    },
+    disabled: {
+        opacity: 0.5,
+        elevation: 0,
+        shadowOpacity: 0,
+    },
+    disabledText: {
+        opacity: 0.7,
     },
 }); 
