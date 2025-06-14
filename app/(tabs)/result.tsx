@@ -10,8 +10,8 @@ import { ThemedView } from '../../components/ThemedView';
 import { VerificationWarningModal } from '../../components/VerificationWarningModal';
 import { Colors } from '../../constants/Colors';
 import {
-    LinkVerificationResult,
-    verifyLinkForSecurity
+  LinkVerificationResult,
+  verifyLinkForSecurity
 } from '../../scripts/linkVerification';
 
 export default function ResultScreen() {
@@ -56,7 +56,7 @@ export default function ResultScreen() {
 
   const proceedToVerification = () => {
     setShowModal(false);
-    router.push(`/verifications?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`);
+    router.replace(`/(tabs)/verifications?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`);
   };
 
   // Composant pour afficher le QR code avec les informations basiques

@@ -3,7 +3,6 @@ import { Modal as RNModal, StyleSheet, TouchableOpacity, View, useColorScheme } 
 import { Colors } from '../constants/Colors';
 import { Button } from './Button';
 import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
 
 interface ModalProps {
     visible: boolean;
@@ -48,7 +47,7 @@ export function Modal({
                 >
                     <View style={styles.modalContainer}>
                         <TouchableOpacity activeOpacity={1} onPress={() => {}}>
-                            <ThemedView style={styles.modalContent}>
+                            <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
                                 <ThemedText type="subtitle" style={styles.modalTitle}>
                                     {title}
                                 </ThemedText>
@@ -77,7 +76,7 @@ export function Modal({
                                         )}
                                     </View>
                                 )}
-                            </ThemedView>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -107,7 +106,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 25,
         alignItems: 'center',
-        shadowColor: Colors.light.shadow,
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 2,

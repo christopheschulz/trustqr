@@ -8,8 +8,8 @@ import { ThemedText } from '../../components/ThemedText';
 import { ThemedView } from '../../components/ThemedView';
 import { Colors } from '../../constants/Colors';
 import {
-  LinkVerificationResult,
-  verifyLinkForSecurity
+    LinkVerificationResult,
+    verifyLinkForSecurity
 } from '../../scripts/linkVerification';
 
 export default function VerificationsScreen() {
@@ -160,7 +160,7 @@ export default function VerificationsScreen() {
           <ThemedView style={styles.buttonContainer}>
             <Button 
               title="Retour aux résultats"
-              onPress={() => router.push(`/result?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`)}
+              onPress={() => router.push(`/(tabs)/result?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`)}
               variant="secondary"
             />
             
