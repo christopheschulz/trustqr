@@ -28,7 +28,7 @@ export function Card({ data, title = "", imageComponent, variant = 'default' }: 
 
     const textColor = variant === 'danger'
         ? Colors.light.white         // Texte blanc pour danger
-        : Colors.light.text;   // Texte normal
+        : colors.text;   // Texte adaptatif selon le thème
 
     return (
         <ThemedView style={[styles.card, { 

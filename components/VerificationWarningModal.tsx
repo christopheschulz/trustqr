@@ -17,7 +17,7 @@ export function VerificationWarningModal({
         <Modal
             visible={visible}
             onClose={onClose}
-            title="Information importante"
+            title="Vérification en ligne"
             primaryButton={{
                 title: "Continuer",
                 onPress: onContinue
@@ -28,11 +28,11 @@ export function VerificationWarningModal({
             }}
         >
             <ThemedText type="default" style={styles.text}>
-                TrustQR est un outil d'aide à la décision qui analyse les liens pour détecter d'éventuelles menaces.
+                La vérification en ligne va analyser le lien en temps réel pour détecter les dernières menaces.
             </ThemedText>
             
             <ThemedText type="default" style={styles.text}>
-                Cette analyse ne garantit pas à 100% la sécurité d'un lien. Restez vigilant et utilisez votre jugement personnel.
+                Cette vérification complète les tests offline déjà effectués et peut prendre quelques secondes.
             </ThemedText>
             
             <ThemedText type="default" style={styles.text}>

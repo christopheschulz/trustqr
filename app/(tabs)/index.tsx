@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../../components/Button';
 import { Colors } from '../../constants/Colors';
@@ -12,6 +12,8 @@ export default function HomeScreen() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
 
   // Réinitialiser le scanning quand la page regagne le focus
   useFocusEffect(
@@ -30,11 +32,11 @@ export default function HomeScreen() {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-        <View style={styles.container}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
           <View style={styles.welcomeContainer}>
-            <Text style={styles.welcomeText}>TrustQR</Text>
-            <Text style={styles.message}>Nous avons besoin de votre autorisation pour utiliser la caméra</Text>
+            <Text style={[styles.welcomeText, { color: colors.tint }]}>TrustQR</Text>
+            <Text style={[styles.message, { color: colors.text }]}>Nous avons besoin de votre autorisation pour utiliser la caméra</Text>
           </View>
           <View style={styles.buttonContainer}>
             <Button onPress={requestPermission} title="Autoriser la caméra" variant="primary" />
@@ -75,9 +77,9 @@ export default function HomeScreen() {
 
   if (isCameraOpen) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-        <View style={styles.container}>
-                  <View style={styles.cameraContainer}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+                  <View style={[styles.cameraContainer, { borderColor: colors.tint }]}>
           <CameraView 
             style={styles.camera} 
             facing="back"
@@ -89,19 +91,19 @@ export default function HomeScreen() {
           
           {/* Cadre intérieur pour guider l'utilisateur */}
           <View style={styles.scanFrame}>
-            <View style={styles.scanCorner} />
-            <View style={[styles.scanCorner, styles.scanCornerTopRight]} />
-            <View style={[styles.scanCorner, styles.scanCornerBottomLeft]} />
-            <View style={[styles.scanCorner, styles.scanCornerBottomRight]} />
+            <View style={[styles.scanCorner, { borderColor: colors.tint }]} />
+            <View style={[styles.scanCorner, styles.scanCornerTopRight, { borderColor: colors.tint }]} />
+            <View style={[styles.scanCorner, styles.scanCornerBottomLeft, { borderColor: colors.tint }]} />
+            <View style={[styles.scanCorner, styles.scanCornerBottomRight, { borderColor: colors.tint }]} />
           </View>
           
           {/* Feedback de succès */}
           {showSuccess && (
             <View style={styles.successOverlay}>
-              <View style={styles.successIcon}>
-                <Text style={styles.checkmark}>✓</Text>
+              <View style={[styles.successIcon, { backgroundColor: colors.security.safe }]}>
+                <Text style={[styles.checkmark, { color: colors.white }]}>✓</Text>
               </View>
-              <Text style={styles.successText}>QR Code détecté !</Text>
+              <Text style={[styles.successText, { color: colors.white }]}>QR Code détecté !</Text>
             </View>
           )}
         </View>
@@ -119,18 +121,18 @@ export default function HomeScreen() {
   }
   
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>TrustQR</Text>
-          <Text style={styles.subtitleText}>Scanner de QR codes sécurisé</Text>
+          <Text style={[styles.welcomeText, { color: colors.tint }]}>TrustQR</Text>
+          <Text style={[styles.subtitleText, { color: colors.text }]}>Scanner de QR codes sécurisé</Text>
         </View>
         
         <View style={styles.buttonContainer}>
           <Button 
             onPress={openCamera}
             title="Scanner"
-            variant="primary"
+            variant="secondary"
           />
         </View>
       </View>
@@ -141,13 +143,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.light.white,
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.light.white,
     padding: 20,
   },
   message: {
@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: Colors.light.tint,
   },
   camera: {
     flex: 1,
@@ -176,12 +175,10 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.light.tint,
     marginBottom: 10,
   },
   subtitleText: {
     fontSize: 16,
-    color: Colors.light.text,
     textAlign: 'center',
   },
   scanFrame: {
@@ -197,7 +194,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 40,
     height: 40,
-    borderColor: Colors.light.tint,
     borderWidth: 3,
     top: 60,
     left: 60,
@@ -242,19 +238,16 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.light.security.safe,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
   },
   checkmark: {
     fontSize: 40,
-    color: Colors.light.white,
     fontWeight: 'bold',
   },
   successText: {
     fontSize: 18,
-    color: Colors.light.white,
     fontWeight: 'bold',
   },
 });

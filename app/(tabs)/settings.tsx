@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Alert, ScrollView, StyleSheet, TextInput, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -8,9 +8,9 @@ import { ThemedView } from '../../components/ThemedView';
 import { Colors } from '../../constants/Colors';
 import { Limits } from '../../constants/Limits';
 import {
-  getUserPreferences,
-  setMaxLinkLength,
-  UserPreferences
+    getUserPreferences,
+    setMaxLinkLength,
+    UserPreferences
 } from '../../scripts/preferences';
 
 export default function Settings() {
@@ -18,6 +18,8 @@ export default function Settings() {
   const [maxLinkLengthInput, setMaxLinkLengthInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
 
   // Charger les préférences au démarrage
   useEffect(() => {
@@ -90,7 +92,7 @@ export default function Settings() {
 
   if (isLoading || !preferences) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
         <ThemedView style={styles.container}>
           <ThemedText type="title" style={styles.title}>
             Chargement des paramètres...
@@ -101,7 +103,7 @@ export default function Settings() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <ScrollView style={styles.scrollView}>
         <ThemedView style={styles.container}>
           <ThemedText type="title" style={styles.title}>
@@ -113,7 +115,7 @@ export default function Settings() {
             data={`Actuellement: ${preferences.maxLinkLength} caractères`}
           />
 
-          <ThemedView style={styles.settingSection}>
+          <ThemedView style={[styles.settingSection, { backgroundColor: colors.tintWithOpacity }]}>
             <ThemedText type="subtitle" style={styles.sectionTitle}>
               Modifier la longueur maximale
             </ThemedText>
@@ -124,10 +126,15 @@ export default function Settings() {
             </ThemedText>
 
             <TextInput
-              style={styles.input}
+              style={[styles.input, { 
+                borderColor: colors.icon,
+                backgroundColor: colors.background,
+                color: colors.text
+              }]}
               value={maxLinkLengthInput}
               onChangeText={setMaxLinkLengthInput}
               placeholder="Longueur maximale"
+              placeholderTextColor={colors.icon}
               keyboardType="numeric"
               maxLength={5}
             />
@@ -140,7 +147,7 @@ export default function Settings() {
             />
           </ThemedView>
 
-          <ThemedView style={styles.settingSection}>
+          <ThemedView style={[styles.settingSection, { backgroundColor: colors.tintWithOpacity }]}>
             <ThemedText type="subtitle" style={styles.sectionTitle}>
               Actions
             </ThemedText>
@@ -152,7 +159,7 @@ export default function Settings() {
             />
           </ThemedView>
 
-          <ThemedView style={styles.infoSection}>
+          <ThemedView style={[styles.infoSection, { backgroundColor: colors.tintWithOpacity }]}>
             <ThemedText style={styles.infoText}>
               Les paramètres sont sauvegardés automatiquement sur votre appareil.
             </ThemedText>
@@ -166,7 +173,6 @@ export default function Settings() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.light.background,
   },
   scrollView: {
     flex: 1,
@@ -183,7 +189,6 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     padding: 15,
     borderRadius: 12,
-    backgroundColor: Colors.light.background,
   },
   sectionTitle: {
     marginBottom: 10,
@@ -197,18 +202,15 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: Colors.light.icon,
     borderRadius: 8,
     padding: 12,
     marginBottom: 15,
     fontSize: 16,
-    backgroundColor: Colors.light.background,
   },
   infoSection: {
     marginTop: 30,
     padding: 15,
     borderRadius: 8,
-    backgroundColor: Colors.light.tintWithOpacity,
   },
   infoText: {
     fontSize: 12,

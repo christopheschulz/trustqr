@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -20,6 +20,8 @@ export default function ResultScreen() {
   const [showModal, setShowModal] = useState(false);
   const [verificationResult, setVerificationResult] = useState<LinkVerificationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
 
   const linkLength = (data || '').length;
 
@@ -72,7 +74,7 @@ export default function ResultScreen() {
   // Affichage de chargement
   if (isLoading || !verificationResult) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
         <ThemedView style={styles.container}>
           <ThemedText type="title" style={styles.title}>
             Analyse en cours...
@@ -83,31 +85,129 @@ export default function ResultScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.title}>
-          Résultat du scan
-        </ThemedText>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <ThemedView style={styles.container}>
+          <ThemedText type="title" style={styles.title}>
+            Résultat du scan
+          </ThemedText>
 
-        <Card 
-          data={verificationResult.displayData} 
-          imageComponent={<QRCodeWithInfo />}
-        />
+          <Card 
+            data={verificationResult.displayData} 
+            imageComponent={<QRCodeWithInfo />}
+          />
 
-        <ThemedView style={styles.buttonsContainer}>
-          <Button 
-            title="Vérifier lien"
-            onPress={handleVerifyLink}
-            variant="secondary"
-          />
-          
-          <Button 
-            title="Nouveau scan"
-            onPress={() => router.push('/')}
-            variant="primary"
-          />
+          {/* Résultats des tests de sécurité offline */}
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Tests de sécurité (offline)
+          </ThemedText>
+
+          {/* Analyse des violations pour chaque test effectué dans getTrustScore */}
+          {(() => {
+            const violations = verificationResult.violations || [];
+            
+            // Tests effectués dans l'ordre exact de getTrustScore :
+            const tests = [
+              {
+                name: '1. Vérification de la longueur',
+                passed: !violations.some(v => v.type === 'length'),
+                description: 'Longueur du lien acceptable'
+              },
+              {
+                name: '2. Vérification du format de l\'URL',
+                passed: !violations.some(v => v.type === 'malformed'),
+                description: 'Format URL valide'
+              },
+              {
+                name: '3. Vérification du protocole HTTPS',
+                passed: !violations.some(v => v.type === 'protocol'),
+                description: 'Protocole sécurisé (HTTPS)'
+              },
+              {
+                name: '4. Vérification de la blacklist',
+                passed: !violations.some(v => v.type === 'blacklist'),
+                description: 'Domaine non blacklisté'
+              },
+              {
+                name: '5. Vérification des domaines suspects',
+                passed: !violations.some(v => v.type === 'suspicious_domain'),
+                description: 'Domaine de confiance'
+              },
+              {
+                name: '6. Vérification des paramètres excessifs',
+                passed: !violations.some(v => v.type === 'excessive_params'),
+                description: 'Nombre de paramètres normal'
+              },
+              {
+                name: '7. Vérification des caractères suspects',
+                passed: !violations.some(v => v.type === 'suspicious_chars'),
+                description: 'Caractères normaux'
+              },
+              {
+                name: '8. Vérification de l\'entropie',
+                passed: !violations.some(v => v.type === 'high_entropy'),
+                description: 'Structure normale'
+              }
+            ];
+
+            const passedTests = tests.filter(test => test.passed).length;
+            const totalTests = tests.length;
+
+            const getSecurityLevelText = (level: string) => {
+              switch (level) {
+                case 'safe': return 'Sûr';
+                case 'suspect': return 'Suspect';
+                case 'dangerous': return 'Dangereux';
+                default: return 'Inconnu';
+              }
+            };
+
+            return (
+              <>
+                {/* Détail de chaque test */}
+                {tests.map((test, index) => (
+                  <Card 
+                    key={index}
+                    title={test.name}
+                    data={`${test.passed ? '✅ RÉUSSI' : '❌ ÉCHOUÉ'} - ${test.description}`}
+                    variant={test.passed ? 'default' : 'danger'}
+                  />
+                ))}
+
+                {/* Alertes détaillées si présentes */}
+                {violations.length > 0 && (
+                  <Card 
+                    title="Détails des violations"
+                    data={violations.map((v, index) => `${index + 1}. ${v.message} (Impact: -${v.impact} points)`).join('\n')}
+                    variant="danger"
+                  />
+                )}
+
+                {/* Score global */}
+                <Card 
+                  title="Score de confiance global"
+                  data={`${verificationResult.trustScore}/100 - ${getSecurityLevelText(verificationResult.securityLevel || 'unknown')}\n\nTests réussis: ${passedTests}/${totalTests}`}
+                  variant={verificationResult.securityLevel === 'dangerous' ? 'danger' : 'default'}
+                />
+              </>
+            );
+          })()}
+
+          <ThemedView style={styles.buttonsContainer}>
+            <Button 
+              title="Vérifier le lien en ligne"
+              onPress={handleVerifyLink}
+              variant="secondary"
+            />
+            
+            <Button 
+              title="Nouveau scan"
+              onPress={() => router.push('/')}
+              variant="primary"
+            />
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
+      </ScrollView>
 
       <VerificationWarningModal
         visible={showModal}
@@ -121,7 +221,6 @@ export default function ResultScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.light.background,
     opacity: 1,
   },
   container: {
@@ -144,5 +243,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.7,
     fontStyle: 'italic',
+  },
+  sectionTitle: {
+    marginBottom: 10,
+  },
+  scrollView: {
+    flex: 1,
   },
 }); 
