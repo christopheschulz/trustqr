@@ -1,9 +1,4 @@
-import { SecurityViolation } from './basicValidation';
-
-/**
- * Caractères suspects
- */
-const SUSPICIOUS_CHARS = ['%', '@', '#', '&', '?', '=', '+', '~', '^', '|', '<', '>'];
+import { SecurityViolation } from './lengthValidation';
 
 /**
  * Calcule l'entropie d'une chaîne (mesure du caractère aléatoire)
@@ -28,44 +23,6 @@ function calculateEntropy(str: string): number {
   // Normaliser entre 0 et 1
   const maxEntropy = Math.log2(length);
   return maxEntropy > 0 ? entropy / maxEntropy : 0;
-}
-
-/**
- * Vérifie si l'URL a trop de paramètres
- */
-export function checkExcessiveParams(parsedUrl: URL): SecurityViolation | null {
-  const paramCount = Array.from(parsedUrl.searchParams.keys()).length;
-  
-  if (paramCount > 5) {
-    return {
-      type: 'excessive_params',
-      severity: 'low',
-      message: `Trop de paramètres (${paramCount})`,
-      impact: 15
-    };
-  }
-  
-  return null;
-}
-
-/**
- * Vérifie la présence de caractères suspects
- */
-export function checkSuspiciousChars(url: string): SecurityViolation | null {
-  const suspiciousCharCount = SUSPICIOUS_CHARS.reduce((count, char) => {
-    return count + (url.split(char).length - 1);
-  }, 0);
-  
-  if (suspiciousCharCount > 10) {
-    return {
-      type: 'suspicious_chars',
-      severity: 'medium',
-      message: `Caractères suspects nombreux (${suspiciousCharCount})`,
-      impact: 25
-    };
-  }
-  
-  return null;
 }
 
 /**

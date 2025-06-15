@@ -1,6 +1,14 @@
-import { SecurityViolation, checkLinkLength, checkProtocol, checkUrlFormat } from './security/basicValidation';
-import { checkBlacklist, checkSuspiciousDomain } from './security/domainValidation';
-import { checkExcessiveParams, checkHighEntropy, checkSuspiciousChars } from './security/urlAnalysis';
+import {
+    SecurityViolation,
+    checkBlacklist,
+    checkExcessiveParams,
+    checkHighEntropy,
+    checkLinkLength,
+    checkProtocol,
+    checkSuspiciousChars,
+    checkSuspiciousDomain,
+    checkUrlFormat
+} from './security/validations';
 
 /**
  * Types pour la vérification des liens

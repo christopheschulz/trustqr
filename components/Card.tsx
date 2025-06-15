@@ -17,7 +17,7 @@ export function Card({ data, title = "", imageComponent, variant = 'default' }: 
 
     // Utiliser une variation de la couleur selon la variante
     const dataBackgroundColor = variant === 'danger'
-        ? colors.danger  // Fond rouge pour danger
+        ? (colorScheme === 'light' ? '#ffebee' : '#4a1f1f')  // Fond rouge très clair pour danger
         : (colorScheme === 'light' 
             ? colors.tint + '10'  // Couleur principale avec 10% d'opacité
             : colors.tint + '20'); // Couleur principale avec 20% d'opacité en mode sombre
@@ -27,7 +27,7 @@ export function Card({ data, title = "", imageComponent, variant = 'default' }: 
         : colors.tint + '30';   // Bordure normale
 
     const textColor = variant === 'danger'
-        ? Colors.light.white         // Texte blanc pour danger
+        ? (colorScheme === 'light' ? '#c62828' : '#ffcdd2')  // Texte rouge foncé pour danger en clair, rouge clair en sombre
         : colors.text;   // Texte adaptatif selon le thème
 
     return (

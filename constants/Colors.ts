@@ -35,12 +35,17 @@ export const Colors = {
         border: 'transparent',
       },
       secondary: {
-        background: 'transparent',
-        text: tintColorLight,
-        border: tintColorLight,
+        background: '#f0f8fc',
+        text: '#0a7ea4',
+        border: '#d1e9f2',
       },
       danger: {
         background: '#E53935',
+        text: '#fff',
+        border: 'transparent',
+      },
+      action: {
+        background: '#FF6B35',
         text: '#fff',
         border: 'transparent',
       },
@@ -74,12 +79,17 @@ export const Colors = {
         border: 'transparent',
       },
       secondary: {
-        background: 'transparent',
-        text: tintColorDark,
-        border: tintColorDark,
+        background: '#2a2f33',
+        text: '#ffffff',
+        border: '#404448',
       },
       danger: {
         background: '#E53935',
+        text: '#fff',
+        border: 'transparent',
+      },
+      action: {
+        background: '#FF6B35',
         text: '#fff',
         border: 'transparent',
       },

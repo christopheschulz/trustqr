@@ -61,7 +61,7 @@ export default function HomeScreen() {
       setShowSuccess(false);
       // Navigate to result page with scanned data
       router.push(`/(tabs)/result?data=${encodeURIComponent(data)}&type=${encodeURIComponent(type)}`);
-    }, 1500); // 1.5 secondes de feedback
+    }, 500); // 0.5 seconde de feedback
   };
 
   const openCamera = () => {
@@ -112,7 +112,8 @@ export default function HomeScreen() {
             <Button 
               onPress={closeCamera}
               title="Annuler"
-              variant="secondary"
+              variant="danger"
+              disabled={hasScanned}
             />
           </View>
         </View>
@@ -132,7 +133,7 @@ export default function HomeScreen() {
           <Button 
             onPress={openCamera}
             title="Scanner"
-            variant="secondary"
+            variant="primary"
           />
         </View>
       </View>

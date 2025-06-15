@@ -5,7 +5,7 @@ import { ThemedText } from './ThemedText';
 interface ButtonProps {
     onPress: () => void;
     title: string;
-    variant?: 'primary' | 'secondary' | 'danger';
+    variant?: 'primary' | 'secondary' | 'danger' | 'action';
     disabled?: boolean;
 }
 

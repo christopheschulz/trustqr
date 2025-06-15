@@ -37,13 +37,13 @@ export default function VerificationsScreen() {
           <Button 
             title="Retour aux résultats"
             onPress={() => router.push(`/(tabs)/result?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`)}
-            variant="primary"
+            variant="secondary"
           />
           
           <Button 
             title="Nouveau scan"
             onPress={() => router.push('/')}
-            variant="secondary"
+            variant="primary"
           />
         </ThemedView>
       </ThemedView>

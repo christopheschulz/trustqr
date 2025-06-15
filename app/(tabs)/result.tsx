@@ -1,5 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../../components/Button';
@@ -22,8 +22,18 @@ export default function ResultScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const linkLength = (data || '').length;
+
+  // Remettre le scroll en haut quand on arrive sur la page
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ y: 0, animated: false });
+      }
+    }, [])
+  );
 
   // Vérification asynchrone du lien
   useEffect(() => {
@@ -61,13 +71,10 @@ export default function ResultScreen() {
     router.replace(`/(tabs)/verifications?data=${encodeURIComponent(data || '')}&type=${encodeURIComponent(type || '')}`);
   };
 
-  // Composant pour afficher le QR code avec les informations basiques
-  const QRCodeWithInfo = () => (
+  // Composant pour afficher le QR code sans les informations textuelles
+  const QRCodeComponent = () => (
     <View style={styles.qrContainer}>
       <QRCodeDisplay value={data || ''} size={100} />
-      <ThemedText style={styles.linkInfo}>
-        Longueur: {linkLength} caractères
-      </ThemedText>
     </View>
   );
 
@@ -86,15 +93,15 @@ export default function ResultScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <ThemedView style={styles.container}>
           <ThemedText type="title" style={styles.title}>
             Résultat du scan
           </ThemedText>
 
           <Card 
-            data={verificationResult.displayData} 
-            imageComponent={<QRCodeWithInfo />}
+            data={`${verificationResult.displayData}\n\nLongueur: ${linkLength} caractères`}
+            imageComponent={<QRCodeComponent />}
           />
 
           {/* Résultats des tests de sécurité offline */}
@@ -197,7 +204,7 @@ export default function ResultScreen() {
             <Button 
               title="Vérifier le lien en ligne"
               onPress={handleVerifyLink}
-              variant="secondary"
+              variant="action"
             />
             
             <Button 
@@ -238,11 +245,6 @@ const styles = StyleSheet.create({
   qrContainer: {
     alignItems: 'center',
     gap: 8,
-  },
-  linkInfo: {
-    fontSize: 12,
-    opacity: 0.7,
-    fontStyle: 'italic',
   },
   sectionTitle: {
     marginBottom: 10,
